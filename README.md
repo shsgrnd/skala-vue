@@ -389,22 +389,20 @@ WeatherParent.vue
 
 #### 환경 변수 설정
 
-프로젝트 루트의 `.env.local`에 OpenWeather API 키를 설정한다.
+로컬 Vercel 실행 또는 Vercel 프로젝트 환경변수에 OpenWeather API 키를 설정한다.
 
 ```dotenv
-VITE_OPENWEATHER_API_KEY=your_openweather_api_key
-VITE_OPENWEATHER_CURRENT_URL=https://api.openweathermap.org/data/2.5/weather
-VITE_OPENWEATHER_GEOCODING_URL=https://api.openweathermap.org/geo/1.0/direct
+OPENWEATHER_API_KEY=your_openweather_api_key
 VITE_OPEN_METEO_AIR_QUALITY_URL=https://air-quality-api.open-meteo.com/v1/air-quality
 VITE_JSONPLACEHOLDER_API_URL=https://jsonplaceholder.typicode.com/posts
 ```
 
-`.env.local`은 `*.local` ignore 규칙으로 버전 관리에서 제외한다. 저장소에는 실제 키 대신 예시 키와 공개 API endpoint를 담은 `.env.example`을 포함한다.
+`.env.local`은 `*.local` ignore 규칙으로 버전 관리에서 제외한다. 저장소에는 실제 키 대신 예시 키를 담은 `.env.example`을 포함한다. 브라우저는 `/api/weather`만 호출하며 Vercel Serverless Function이 OpenWeather 요청을 중계한다.
 
 #### 학습 내용
 
-> - Axios를 이용한 OpenWeather Current Weather API 요청
-> - Geocoding API로 도시명을 위도·경도로 변환하는 방법
+> - Axios를 이용한 `/api/weather` Serverless Function 요청
+> - 서버에서 Geocoding API로 도시명을 위도·경도로 변환하는 방법
 > - Pinia action에서 비동기 데이터와 로딩·오류 상태를 관리하는 방법
 > - Router, Store, Axios를 하나의 누적 애플리케이션에서 연동하는 방법
 
@@ -415,7 +413,7 @@ VITE_JSONPLACEHOLDER_API_URL=https://jsonplaceholder.typicode.com/posts
 > - 실제 API 응답을 기존 날씨 카드 형식으로 변환해 UI 컴포넌트 재사용
 > - 상세 페이지 URL에 도시 ID와 좌표를 전달해 새로고침 후에도 날씨를 다시 조회
 > - API 키 누락, 도시 검색 실패, 일부 기본 도시 조회 실패를 화면 메시지로 안내
-> - OpenWeather, Geocoding, Open-Meteo와 JSONPlaceholder endpoint를 Vite 환경변수로 관리
+> - OpenWeather API 키는 서버 환경변수로, 공개 Open-Meteo와 JSONPlaceholder endpoint는 Vite 환경변수로 관리
 > - Open-Meteo Air Quality API로 상세 화면에 PM10, PM2.5, 자외선 및 대기질 지수 표시
 
 #### 개인 커스터마이징
@@ -433,7 +431,7 @@ VITE_JSONPLACEHOLDER_API_URL=https://jsonplaceholder.typicode.com/posts
 
 | 문제                                                      | 해결                                                                |
 | --------------------------------------------------------- | ------------------------------------------------------------------- |
-| API 키가 컴포넌트에 직접 작성되어 노출될 수 있음          | 키를 `.env.local`로 이동하고 `import.meta.env`로 참조               |
+| API 키가 클라이언트 번들에서 노출될 수 있음                | 서버 전용 환경변수와 `/api/weather` 함수로 OpenWeather 요청을 중계 |
 | 도시 이름만으로는 같은 이름의 해외 도시가 검색될 수 있음  | Geocoding 검색어에 `KR`을 추가하고 국가 코드도 다시 확인            |
 | 상세 페이지를 새로고침하면 Store 데이터가 사라짐          | URL query의 위도·경도로 해당 도시 날씨를 다시 요청                  |
 | 여러 기본 도시 중 하나가 실패하면 전체 목록이 사라짐      | `Promise.allSettled`로 성공한 요청 결과를 각각 반영                 |

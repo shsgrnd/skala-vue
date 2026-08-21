@@ -2,22 +2,15 @@
 import { ref } from 'vue'
 import axios from 'axios'
 
-const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY
-const WEATHER_URL = import.meta.env.VITE_OPENWEATHER_CURRENT_URL
 const weatherData = ref(null)
 const isLoading = ref(false)
 const handleFetchWeather = async () => {
   isLoading.value = true
   try {
-    if (!API_KEY) throw new Error('OpenWeather API 키가 없습니다.')
-    if (!WEATHER_URL) throw new Error('OpenWeather API URL이 없습니다.')
-    const response = await axios.get(WEATHER_URL, {
+    const response = await axios.get('/api/weather', {
       params: {
         lat: 35.158582,
         lon: 126.804975,
-        appid: API_KEY,
-        units: 'metric',
-        lang: 'kr',
       },
     })
     console.log('Axios 통신 응답 전체 객체:', response)
@@ -25,7 +18,7 @@ const handleFetchWeather = async () => {
     weatherData.value = response.data
   } catch (error) {
     console.error('통신 중 에러가 발생했습니다:', error)
-    alert('데이터를 가져오지 못했습니다. API 키 활성화 여부나 주소를 확인하세요.')
+    alert('날씨 데이터를 가져오지 못했습니다. 잠시 후 다시 시도하세요.')
   } finally {
     isLoading.value = false
   }

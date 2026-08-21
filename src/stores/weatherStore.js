@@ -2,10 +2,6 @@ import axios from 'axios'
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY
-const WEATHER_URL = import.meta.env.VITE_OPENWEATHER_CURRENT_URL
-const GEOCODING_URL = import.meta.env.VITE_OPENWEATHER_GEOCODING_URL
-
 const DEFAULT_CITIES = [
   { name: '서울', lat: 37.5665, lon: 126.978 },
   { name: '부산', lat: 35.1796, lon: 129.0756 },
@@ -38,27 +34,11 @@ export const upsertCity = (cities, city) => {
   else cities.splice(index, 1, city)
 }
 
-const requireApiConfig = () => {
-  if (!API_KEY) throw new Error('OpenWeather API 키를 .env.local에 설정해주세요.')
-  if (!WEATHER_URL || !GEOCODING_URL) {
-    throw new Error('OpenWeather API URL을 .env.local에 설정해주세요.')
-  }
-}
-
-const getErrorMessage = (requestError) => {
-  const knownMessages = [
-    'OpenWeather API 키를 .env.local에 설정해주세요.',
-    'OpenWeather API URL을 .env.local에 설정해주세요.',
-  ]
-  return knownMessages.includes(requestError.message)
-    ? requestError.message
-    : '날씨 정보를 가져오지 못했습니다. 잠시 후 다시 시도해주세요.'
-}
+const getErrorMessage = () => '날씨 정보를 가져오지 못했습니다. 잠시 후 다시 시도해주세요.'
 
 const requestWeather = async ({ name, lat, lon }) => {
-  requireApiConfig()
-  const { data } = await axios.get(WEATHER_URL, {
-    params: { lat, lon, appid: API_KEY, units: 'metric', lang: 'kr' },
+  const { data } = await axios.get('/api/weather', {
+    params: { lat, lon },
   })
   return normalizeWeather(data, name)
 }
@@ -114,25 +94,17 @@ export const useWeatherStore = defineStore('weather', () => {
     loading.value = true
     error.value = ''
     try {
-      requireApiConfig()
-      const { data } = await axios.get(GEOCODING_URL, {
-        params: { q: `${keyword},KR`, limit: 5, appid: API_KEY },
+      const { data } = await axios.get('/api/weather', {
+        params: { q: keyword },
       })
-      const location = data.find(({ country }) => country === 'KR')
-      if (!location) {
-        error.value = `‘${keyword}’ 도시를 찾을 수 없습니다.`
-        return null
-      }
-
-      const city = await requestWeather({
-        name: keyword,
-        lat: location.lat,
-        lon: location.lon,
-      })
+      const city = normalizeWeather(data, keyword)
       upsertCity(cities.value, city)
       return city
     } catch (requestError) {
-      error.value = getErrorMessage(requestError)
+      error.value =
+        requestError.response?.status === 404
+          ? `‘${keyword}’ 도시를 찾을 수 없습니다.`
+          : getErrorMessage()
       return null
     } finally {
       loading.value = false
