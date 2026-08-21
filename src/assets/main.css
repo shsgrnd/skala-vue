@@ -1,0 +1,75 @@
+@layer theme, base, primevue, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss-primeui';
+@import 'tailwindcss/utilities.css' layer(utilities);
+@import './base.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --site-background: #f5f5f7;
+  --site-surface: #ffffff;
+  --site-surface-secondary: #f0f0f2;
+  --site-text: #1d1d1f;
+  --site-text-muted: #6e6e73;
+  --site-border: rgb(0 0 0 / 0.08);
+  --site-red: #ea002c;
+  --site-orange: #f47725;
+  --page-bg: var(--site-background);
+  --surface: var(--site-surface);
+  --surface-secondary: var(--site-surface-secondary);
+  --text-primary: var(--site-text);
+  --text-secondary: var(--site-text-muted);
+  --border: var(--site-border);
+  --sk-red: var(--site-red);
+  --sk-orange: var(--site-orange);
+  --color-background: var(--surface-secondary);
+  --color-surface: var(--surface);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-disabled: color-mix(in srgb, var(--text-secondary) 68%, transparent);
+  --color-border: var(--border);
+}
+
+html.dark {
+  --site-background: #050506;
+  --site-surface: #1d1d1f;
+  --site-surface-secondary: #2c2c2e;
+  --site-text: #f5f5f7;
+  --site-text-muted: #a1a1a6;
+  --site-border: rgb(255 255 255 / 0.1);
+  color-scheme: dark;
+}
+
+body {
+  background: var(--site-background);
+  transition: background-color 0.35s ease;
+}
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+}
+
+a:focus-visible {
+  border-radius: 2px;
+  outline: 3px solid rgba(234, 0, 44, 0.18);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+  }
+}
