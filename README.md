@@ -431,7 +431,7 @@ VITE_JSONPLACEHOLDER_API_URL=https://jsonplaceholder.typicode.com/posts
 
 | 문제                                                      | 해결                                                                |
 | --------------------------------------------------------- | ------------------------------------------------------------------- |
-| API 키가 클라이언트 번들에서 노출될 수 있음                | 서버 전용 환경변수와 `/api/weather` 함수로 OpenWeather 요청을 중계 |
+| API 키가 클라이언트 번들에서 노출될 수 있음               | 서버 전용 환경변수와 `/api/weather` 함수로 OpenWeather 요청을 중계  |
 | 도시 이름만으로는 같은 이름의 해외 도시가 검색될 수 있음  | Geocoding 검색어에 `KR`을 추가하고 국가 코드도 다시 확인            |
 | 상세 페이지를 새로고침하면 Store 데이터가 사라짐          | URL query의 위도·경도로 해당 도시 날씨를 다시 요청                  |
 | 여러 기본 도시 중 하나가 실패하면 전체 목록이 사라짐      | `Promise.allSettled`로 성공한 요청 결과를 각각 반영                 |
@@ -551,5 +551,5 @@ OpenWeather API
 
 ## 배포
 
-- 서비스 주소:
+- 서비스 주소: https://skala-vue-chi-puce.vercel.app/
 - GitHub 저장소: https://github.com/shsgrnd/skala-vue
