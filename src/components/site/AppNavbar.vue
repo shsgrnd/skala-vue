@@ -2,6 +2,7 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import Button from 'primevue/button'
+import UnitToggler from '@/components/exercise/UnitToggler.vue'
 import { useConfigStore } from '@/stores/configStore'
 
 const route = useRoute()
@@ -32,7 +33,10 @@ onBeforeUnmount(() => window.removeEventListener('scroll', updateScrolled))
     <div class="site-navbar__inner h-14 w-full px-4 lg:px-6">
       <RouterLink class="site-navbar__brand" to="/">Never Under Dressed</RouterLink>
 
-      <nav class="site-navbar__links flex min-w-0 flex-1 items-stretch overflow-x-auto" aria-label="주요 메뉴">
+      <nav
+        class="site-navbar__links flex min-w-0 flex-1 items-stretch overflow-x-auto"
+        aria-label="주요 메뉴"
+      >
         <RouterLink
           v-for="item in navItems"
           :key="item.section"
@@ -44,15 +48,18 @@ onBeforeUnmount(() => window.removeEventListener('scroll', updateScrolled))
         </RouterLink>
       </nav>
 
-      <Button
-        text
-        rounded
-        class="site-navbar__theme shrink-0"
-        :aria-label="configStore.theme === 'light' ? '다크 모드로 변경' : '라이트 모드로 변경'"
-        @click="configStore.toggleTheme"
-      >
-        <span aria-hidden="true">{{ configStore.theme === 'light' ? '🌙' : '☀️' }}</span>
-      </Button>
+      <div class="site-navbar__actions">
+        <UnitToggler class="site-navbar__unit" />
+        <Button
+          text
+          rounded
+          class="site-navbar__theme shrink-0"
+          :aria-label="configStore.theme === 'light' ? '다크 모드로 변경' : '라이트 모드로 변경'"
+          @click="configStore.toggleTheme"
+        >
+          <span aria-hidden="true">{{ configStore.theme === 'light' ? '🌙' : '☀️' }}</span>
+        </Button>
+      </div>
     </div>
   </header>
 </template>
@@ -138,15 +145,28 @@ onBeforeUnmount(() => window.removeEventListener('scroll', updateScrolled))
 
 .site-navbar__theme {
   align-self: center;
-  justify-self: end;
   width: 2.5rem;
   height: 2.5rem;
   color: var(--site-text) !important;
 }
 
+.site-navbar__actions {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  gap: 6px;
+}
+
+.site-navbar__unit {
+  margin-left: 0 !important;
+  color: var(--site-text);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
 @media (max-width: 640px) {
   .site-navbar__inner {
-    grid-template-columns: minmax(0, 1fr) 2.5rem;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 6px;
     overflow: hidden;
   }
@@ -166,6 +186,10 @@ onBeforeUnmount(() => window.removeEventListener('scroll', updateScrolled))
 
   .site-navbar__theme {
     flex: 0 0 2.5rem;
+  }
+
+  .site-navbar__unit :deep(span) {
+    display: none;
   }
 }
 

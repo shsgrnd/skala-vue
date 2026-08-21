@@ -17,7 +17,14 @@ const configStore = useConfigStore()
     <span
       >날씨단위: <strong>{{ configStore.unit === 'celsius' ? '섭씨(℃)' : '화씨(℉)' }}</strong></span
     >
-    <button @click="configStore.toggleUnit" class="toggle-btn">단위변경</button>
+    <button
+      type="button"
+      class="toggle-btn"
+      :aria-label="configStore.unit === 'celsius' ? '화씨로 변경' : '섭씨로 변경'"
+      @click="configStore.toggleUnit"
+    >
+      ℃ / ℉
+    </button>
   </div>
 </template>
 
