@@ -554,4 +554,4 @@ OpenWeather API
 ## 배포
 
 - 서비스 주소:
-- GitHub 저장소:
+- GitHub 저장소: https://github.com/shsgrnd/skala-vue
